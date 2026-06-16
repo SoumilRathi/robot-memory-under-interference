@@ -1,11 +1,3 @@
-# Website
+# Website Redirect
 
-Static project page for GitHub Pages.
-
-Run locally:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open `http://localhost:8000`. The root page redirects here.
+The project website is served from the repository root. This directory only preserves the older `/website/` URL as a redirect.

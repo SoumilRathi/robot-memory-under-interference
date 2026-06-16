@@ -51,10 +51,9 @@ Full confidence intervals and paired bootstrap comparisons are in [`results/anal
 ├── scripts/
 │   ├── analyze_cross_session_results.py
 │   └── create_cross_session_protocol_figure.py
-└── website/
-    ├── index.html
-    ├── styles.css
-    └── assets/
+├── assets/
+├── styles.css
+└── index.html
 ```
 
 ## Quick Start
@@ -78,7 +77,7 @@ Open the website locally:
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. The root page redirects to `website/`.
+Then open `http://localhost:8000`.
 
 ## Relationship to RoboMME
 

@@ -6,7 +6,7 @@ authors:
     given-names: "Soumil"
 year: 2026
 repository-code: "https://github.com/SoumilRathi/robot-memory-under-interference"
-url: "https://soumilrathi.github.io/robot-memory-under-interference/"
+url: "https://robotmemorybench.com"
 preferred-citation:
   type: article
   title: "Benchmarking Robot Memory Under Interference"
@@ -14,4 +14,3 @@ preferred-citation:
     - family-names: "Shah"
       given-names: "Soumil"
   year: 2026
-

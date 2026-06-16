@@ -3,14 +3,204 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=website/" />
     <title>Benchmarking Robot Memory Under Interference</title>
-    <link rel="canonical" href="website/" />
+    <meta
+      name="description"
+      content="A cross-session benchmark for memory-augmented VLAs."
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <p>
-      Redirecting to
-      <a href="website/">Benchmarking Robot Memory Under Interference</a>.
-    </p>
+    <header class="site-header">
+      <nav class="nav">
+        <a href="#protocol">Protocol</a>
+        <a href="#results">Results</a>
+        <a href="#artifacts">Artifacts</a>
+        <a href="#citation">Citation</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Cross-session robot memory benchmark</p>
+          <h1>Benchmarking Robot Memory Under Interference</h1>
+          <p class="subtitle">
+            A cross-session benchmark for memory-augmented VLAs.
+          </p>
+          <p class="summary">
+            RoboMME-Interference evaluates whether robot memory systems can still use a relevant
+            prior session after unrelated robot experiences are inserted into
+            the history buffer.
+          </p>
+          <div class="actions" aria-label="Project links">
+            <a class="button primary" href="paper/main.pdf">Paper draft</a>
+            <a class="button" href="RESULTS.md">Results</a>
+            <a class="button" href="BENCHMARK_PROTOCOL.md">Protocol</a>
+            <a class="button" href="results/canonical_rollouts.csv">Data</a>
+          </div>
+        </div>
+        <figure class="hero-figure">
+          <img
+            src="assets/overall_plain_success_by_condition.png"
+            alt="Overall success by history condition"
+          />
+          <figcaption>
+            Perceptual memory systems help when the relevant session is nearby,
+            then degrade as distractor sessions increase.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="stats-strip" aria-label="Benchmark scale">
+        <div>
+          <strong>18,450</strong>
+          <span>completed rollouts</span>
+        </div>
+        <div>
+          <strong>9</strong>
+          <span>task families</span>
+        </div>
+        <div>
+          <strong>9</strong>
+          <span>evaluated systems</span>
+        </div>
+        <div>
+          <strong>5</strong>
+          <span>history conditions</span>
+        </div>
+      </section>
+
+      <section id="protocol" class="section">
+        <div class="section-text">
+          <p class="eyebrow">Protocol</p>
+          <h2>Relevant memory, then unrelated experience.</h2>
+          <p>
+            RoboMME-Interference gives each query episode a history buffer. In <code>k0</code>,
+            the buffer contains the relevant lesson session. In
+            <code>k1</code>, <code>k3</code>, and <code>k7</code>, unrelated
+            different-family sessions are inserted after the relevant lesson.
+            The policy interface stays fixed.
+          </p>
+        </div>
+        <figure class="wide-figure">
+          <img src="assets/protocol_diagram.png" alt="Cross-session protocol" />
+        </figure>
+      </section>
+
+      <section id="results" class="section result-grid">
+        <div class="section-text">
+          <p class="eyebrow">Result</p>
+          <h2>Near-session memory helps. Interference erodes it.</h2>
+          <p>
+            FrameSamp-Modul is the strongest system in this grid, rising from
+            18.2% without history to 45.3% at <code>k0</code>. By
+            <code>k7</code>, its success drops back near the no-history floor.
+          </p>
+        </div>
+        <div class="result-cards">
+          <article>
+            <span>FrameSamp-Modul</span>
+            <strong>+27.1 pp</strong>
+            <p><code>k0</code> over no-history</p>
+          </article>
+          <article>
+            <span>TokenDrop-Modul</span>
+            <strong>+18.2 pp</strong>
+            <p><code>k0</code> over no-history</p>
+          </article>
+          <article>
+            <span>FrameSamp-Modul</span>
+            <strong>-26.0 pp</strong>
+            <p><code>k7</code> versus <code>k0</code></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section figures">
+        <figure>
+          <img
+            src="assets/interference_drop_k0_to_k7.png"
+            alt="Interference drop from k0 to k7"
+          />
+          <figcaption>
+            Interference sensitivity: success drop from <code>k0</code> to
+            <code>k7</code>.
+          </figcaption>
+        </figure>
+        <figure>
+          <img
+            src="assets/framesamp_modul_family_heatmap.png"
+            alt="FrameSamp-Modul family heatmap"
+          />
+          <figcaption>
+            Per-family heatmap for FrameSamp-Modul, the strongest evaluated
+            variant.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="section">
+        <div class="section-text">
+          <p class="eyebrow">Headline table</p>
+          <h2>Main success rates.</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>No history</th>
+                <th>k0</th>
+                <th>k1</th>
+                <th>k3</th>
+                <th>k7</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>pi0.5 baseline</td><td>17.3%</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr><td>FrameSamp-Modul</td><td>18.2%</td><td>45.3%</td><td>38.4%</td><td>30.0%</td><td>19.3%</td></tr>
+              <tr><td>TokenDrop-Modul</td><td>17.1%</td><td>35.3%</td><td>30.9%</td><td>23.6%</td><td>19.8%</td></tr>
+              <tr><td>FrameSamp-Context</td><td>17.8%</td><td>26.7%</td><td>18.7%</td><td>18.7%</td><td>17.8%</td></tr>
+              <tr><td>FrameSamp-Expert</td><td>17.6%</td><td>27.1%</td><td>20.9%</td><td>19.6%</td><td>19.6%</td></tr>
+              <tr><td>TokenDrop-Context</td><td>13.8%</td><td>22.9%</td><td>19.1%</td><td>15.3%</td><td>13.1%</td></tr>
+              <tr><td>TokenDrop-Expert</td><td>16.9%</td><td>27.3%</td><td>20.2%</td><td>15.6%</td><td>14.0%</td></tr>
+              <tr><td>Recurrent-TTT-Expert</td><td>16.0%</td><td>18.0%</td><td>16.4%</td><td>16.2%</td><td>15.6%</td></tr>
+              <tr><td>Recurrent-TTT-Context</td><td>16.9%</td><td>15.3%</td><td>16.2%</td><td>17.6%</td><td>14.0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="artifacts" class="section artifact-links">
+        <div>
+          <p class="eyebrow">Artifacts</p>
+          <h2>Code, data, and paper.</h2>
+          <p>
+            The repository includes the canonical rollout table, result
+            manifest, generated figures, analysis scripts, and a LaTeX paper
+            draft.
+          </p>
+        </div>
+        <ul>
+          <li><a href="README.md">Repository README</a></li>
+          <li><a href="BENCHMARK_PROTOCOL.md">Benchmark protocol</a></li>
+          <li><a href="RESULTS.md">Result summary</a></li>
+          <li><a href="paper/main.pdf">Paper draft</a></li>
+          <li><a href="results/analysis/tables/main_success_rates.csv">Main success CSV</a></li>
+        </ul>
+      </section>
+
+      <section id="citation" class="section citation">
+        <p class="eyebrow">Citation</p>
+        <h2>Cite this benchmark.</h2>
+        <pre><code>@misc{shah2026robotmemoryinterference,
+  title  = {Benchmarking Robot Memory Under Interference},
+  author = {Shah, Soumil},
+  year   = {2026},
+  url    = {https://robotmemorybench.com}
+}</code></pre>
+      </section>
+    </main>
   </body>
 </html>
