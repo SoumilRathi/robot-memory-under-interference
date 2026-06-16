@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or result package, please cite it."
+title: "Benchmarking Robot Memory Under Interference"
+authors:
+  - family-names: "Shah"
+    given-names: "Soumil"
+year: 2026
+repository-code: "https://github.com/SoumilRathi/robot-memory-under-interference"
+url: "https://soumilrathi.github.io/robot-memory-under-interference/"
+preferred-citation:
+  type: article
+  title: "Benchmarking Robot Memory Under Interference"
+  authors:
+    - family-names: "Shah"
+      given-names: "Soumil"
+  year: 2026
+

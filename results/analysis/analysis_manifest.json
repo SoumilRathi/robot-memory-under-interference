@@ -1,0 +1,29 @@
+{
+  "source_results_dir": "/Users/soumil/Documents/robotics/release/robot-memory-under-interference/results",
+  "analysis_dir": "/Users/soumil/Documents/robotics/release/robot-memory-under-interference/results/analysis",
+  "expected_cells": 369,
+  "complete_cells": 369,
+  "row_coverage": "18450/18450",
+  "generated_tables": [
+    "difficulty_success_rates.csv",
+    "effect_sizes.csv",
+    "family_success_rates.csv",
+    "family_variant_condition_stats.csv",
+    "main_success_rates.csv",
+    "memory_lift_vs_no_history.csv",
+    "paired_bootstrap_comparisons.csv",
+    "variant_condition_stats.csv",
+    "variant_difficulty_stats.csv"
+  ],
+  "generated_figures": [
+    "difficulty_breakdown.png",
+    "difficulty_plain_success.png",
+    "framesamp_modul_family_heatmap.png",
+    "interference_drop_k0_to_k7.png",
+    "k0_lift_ranking.png",
+    "memory_lift_vs_no_history.png",
+    "overall_plain_success_by_condition.png",
+    "per_family_plain_success_small_multiples.png",
+    "success_vs_session_distance.png"
+  ]
+}
