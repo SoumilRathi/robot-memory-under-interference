@@ -1,11 +1,11 @@
 :root {
-  --bg: #ffffff;
-  --ink: #181818;
-  --muted: #555555;
-  --faint: #777777;
-  --line: #d9d9d9;
-  --soft: #f7f7f7;
-  --accent: #7a2e21;
+  --bg: #fdfdfb;
+  --ink: #171717;
+  --muted: #545454;
+  --faint: #737373;
+  --line: #dedede;
+  --soft: #f5f5f3;
+  --accent: #234f7e;
 }
 
 * {
@@ -14,32 +14,33 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--bg);
 }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: "Times New Roman", Times, serif;
-  font-size: 18px;
-  line-height: 1.55;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.62;
 }
 
 main {
-  max-width: 980px;
+  max-width: 1020px;
   margin: 0 auto;
-  padding: 42px 24px 72px;
+  padding: 54px 24px 76px;
 }
 
 a {
-  color: #1f4f8f;
+  color: var(--accent);
   text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 
 img {
   display: block;
-  width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -53,42 +54,48 @@ table,
 }
 
 .project-header {
-  max-width: 900px;
-  margin: 0 auto 42px;
+  max-width: 920px;
+  margin: 0 auto 46px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid var(--line);
   text-align: center;
 }
 
 .venue {
-  margin: 0 0 12px;
-  color: var(--accent);
-  font-size: 14px;
-  letter-spacing: 0.03em;
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.04em;
 }
 
 h1 {
-  max-width: 900px;
+  max-width: 860px;
   margin: 0 auto;
-  font-size: 46px;
-  line-height: 1.08;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5.2vw, 62px);
+  line-height: 1.05;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 .subtitle {
-  margin: 16px 0 0;
+  max-width: 760px;
+  margin: 18px auto 0;
   color: var(--muted);
-  font-size: 23px;
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.35;
 }
 
 .authors {
-  margin: 22px 0 0;
-  font-size: 19px;
+  margin: 24px 0 0;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .affiliation {
-  margin: 4px 0 0;
+  margin: 3px 0 0;
   color: var(--faint);
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .links {
@@ -100,19 +107,22 @@ h1 {
 }
 
 .links a {
-  display: inline-block;
-  padding: 7px 13px;
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  background: var(--soft);
-  color: var(--ink);
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid #cfcfcf;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #202020;
+  font-size: 13px;
   text-decoration: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
 }
 
 .links a:hover {
-  border-color: #999999;
-  background: #eeeeee;
+  border-color: #a8a8a8;
+  background: var(--soft);
 }
 
 section {
@@ -121,8 +131,10 @@ section {
 
 h2 {
   margin: 0 0 12px;
-  font-size: 26px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
   line-height: 1.2;
+  letter-spacing: -0.005em;
 }
 
 p {
@@ -145,23 +157,25 @@ figure img {
 }
 
 figcaption {
-  max-width: 860px;
-  margin: 8px auto 0;
+  max-width: 880px;
+  margin: 9px auto 0;
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #ffffff;
   margin: 34px 0 48px;
 }
 
 .summary-grid div {
-  padding: 18px 14px;
+  padding: 17px 14px;
   text-align: center;
 }
 
@@ -171,7 +185,8 @@ figcaption {
 
 .summary-grid span {
   display: block;
-  font-size: 28px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
   font-weight: 700;
   line-height: 1;
 }
@@ -179,7 +194,7 @@ figcaption {
 .summary-grid p {
   margin: 7px 0 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .findings,
@@ -198,13 +213,15 @@ figcaption {
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #ffffff;
 }
 
 table {
   width: 100%;
   min-width: 760px;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 th,
@@ -222,7 +239,8 @@ td:first-child {
 
 thead th {
   background: var(--soft);
-  font-weight: 600;
+  color: #303030;
+  font-weight: 650;
 }
 
 tbody tr:last-child td {
@@ -232,7 +250,7 @@ tbody tr:last-child td {
 .note {
   margin-top: 10px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .figure-pair {
@@ -245,22 +263,24 @@ pre {
   overflow-x: auto;
   padding: 16px;
   border: 1px solid var(--line);
+  border-radius: 3px;
   background: var(--soft);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.48;
 }
 
 @media (max-width: 760px) {
   main {
-    padding: 30px 16px 56px;
+    padding: 32px 16px 56px;
+  }
+
+  .project-header {
+    margin-bottom: 34px;
+    padding-bottom: 28px;
   }
 
   h1 {
-    font-size: 34px;
-  }
-
-  .subtitle {
-    font-size: 20px;
+    font-size: 36px;
   }
 
   .summary-grid,

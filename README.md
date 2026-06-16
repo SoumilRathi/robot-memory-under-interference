@@ -52,7 +52,7 @@ Full confidence intervals and paired bootstrap comparisons are in [`results/anal
 │   ├── analyze_cross_session_results.py
 │   └── create_cross_session_protocol_figure.py
 ├── assets/
-├── styles.css
+├── research.css
 └── index.html
 ```
 
