@@ -2,18 +2,9 @@
 
 ## Requirements
 
-For result analysis:
+Python 3.10+ with `pandas`, `numpy`, and `matplotlib`.
 
-- Python 3.10+
-- `pandas`
-- `numpy`
-- `matplotlib`
-
-For paper compilation:
-
-- LaTeX distribution with `latexmk`.
-
-## Regenerate Analysis
+## Rebuild the analysis package
 
 From the repository root:
 
@@ -21,47 +12,26 @@ From the repository root:
 python3 scripts/analyze_cross_session_results.py --results-dir results
 ```
 
-This regenerates:
+This reads [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv) and regenerates:
 
-- `results/analysis/tables/*.csv`
-- `results/analysis/figures/*.png`
-- `results/analysis/figures/*.pdf`
-- `results/analysis/analysis_manifest.json`
+- `results/analysis/tables/*.csv` — success-rate and effect-size tables with Wilson 95% intervals.
+- `results/analysis/figures/*.{png,pdf}` — the analysis figures.
+- `results/analysis/analysis_manifest.json`.
 
-## Regenerate Protocol Figure
+## Regenerate the protocol diagram
 
 ```bash
 python3 scripts/create_cross_session_protocol_figure.py
 ```
 
-This writes:
+Writes `assets/protocol_diagram.png`, used by the website.
 
-- `paper/figures/protocol_diagram.png`
-- `paper/figures/protocol_diagram.pdf`
-
-## Compile Paper
+## Run the website locally
 
 ```bash
-cd paper
-latexmk -pdf -interaction=nonstopmode main.tex
+python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-Output:
+## Scope
 
-- `paper/main.pdf`
-
-## Run Website Locally
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open:
-
-```text
-http://localhost:8000
-```
-
-## Notes
-
-The repository contains the final rollout results and analysis package. It does not contain simulator checkpoints, raw rollout videos, or per-step action traces.
+This repository holds the final rollout results and the analysis package. Simulator checkpoints, raw rollout videos, and per-step action traces are not redistributed here — they come from [RoboMME](https://robomme.github.io/).

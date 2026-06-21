@@ -1,21 +1,24 @@
 # RoboMME-Interference Results
 
-This directory is the single source of truth for the RoboMME-Interference cross-session memory evaluation results.
+The canonical results for the RoboMME-Interference cross-session memory benchmark.
 
 ## Files
 
-- `canonical_rollouts.csv`: one deduplicated rollout row per `(variant, family, condition, episode)`.
-- `coverage.csv`: cell-level coverage and missing episodes.
-- `grid_summary.csv`: success rate by variant and memory condition.
+- `canonical_rollouts.csv`: one deduplicated rollout per `(variant, family, condition, episode)` — the source of truth.
+- `coverage.csv`: cell-level coverage and any missing episodes.
+- `grid_summary.csv`: success rate by variant and condition.
 - `by_family_condition.csv`: success rate by family, variant, and condition.
 - `by_difficulty.csv`: success rate by variant and difficulty.
-- `MANIFEST.json`: source files and build metadata.
+- `MANIFEST.json`: grid definition and coverage counts.
+- `SHA256SUMS`: checksums for the files above.
+- `analysis/`: generated tables and figures (rebuild with [`scripts/analyze_cross_session_results.py`](../scripts/analyze_cross_session_results.py)).
 
-## Current Coverage
+## Coverage
 
-- Complete cells: 369/369
-- Partial cells: 0
-- Missing cells: 0
-- Row coverage: 18450/18450
+369 / 369 cells complete; 18,450 / 18,450 rollouts.
 
-The live rollout may still be running. Rebuild this directory after the live run finishes for final paper numbers.
+## Integrity
+
+```bash
+cd results && shasum -a 256 -c SHA256SUMS
+```

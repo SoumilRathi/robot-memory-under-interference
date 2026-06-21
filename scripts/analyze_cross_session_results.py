@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate paper-facing tables and figures for RoboMME cross-session results."""
+"""Generate analysis tables and figures for RoboMME-Interference cross-session results."""
 
 from __future__ import annotations
 
@@ -107,60 +107,9 @@ def plot_wilson_errorbar(ax: plt.Axes, x: np.ndarray, sub: pd.DataFrame, **kwarg
     ax.errorbar(x, y, yerr=yerr, capsize=3, **kwargs)
 
 
-def paired_bootstrap(df: pd.DataFrame, samples: int, seed: int) -> pd.DataFrame:
-    rng = np.random.default_rng(seed)
-    rows = []
-    for variant in MEMORY_VARIANTS:
-        vdf = df[df["variant"].astype(str).eq(variant)]
-        pivot = vdf.pivot_table(
-            index=["family", "episode"],
-            columns="condition",
-            values="success_bool",
-            aggfunc="first",
-            observed=True,
-        )
-        comparisons = [(condition, "no-history", f"{condition}_minus_no_history") for condition in MEMORY_CONDITIONS]
-        comparisons.extend(
-            [
-                ("k7", "k0", "k7_minus_k0"),
-                ("k3", "k0", "k3_minus_k0"),
-                ("k1", "k0", "k1_minus_k0"),
-            ]
-        )
-        for left, right, comparison in comparisons:
-            if left not in pivot.columns or right not in pivot.columns:
-                continue
-            pair = pivot[[left, right]].dropna().astype(float)
-            if pair.empty:
-                continue
-            diffs = (pair[left] - pair[right]).to_numpy()
-            idx = rng.integers(0, len(diffs), size=(samples, len(diffs)))
-            boot = diffs[idx].mean(axis=1)
-            ci_low, ci_high = np.quantile(boot, [0.025, 0.975])
-            rows.append(
-                {
-                    "variant": variant,
-                    "comparison": comparison,
-                    "left_condition": left,
-                    "right_condition": right,
-                    "paired_units": len(diffs),
-                    "left_rate": float(pair[left].mean()),
-                    "right_rate": float(pair[right].mean()),
-                    "diff": float(diffs.mean()),
-                    "ci_low": float(ci_low),
-                    "ci_high": float(ci_high),
-                    "bootstrap_prob_diff_gt_0": float((boot > 0).mean()),
-                    "bootstrap_prob_diff_lt_0": float((boot < 0).mean()),
-                }
-            )
-    return pd.DataFrame(rows)
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--results-dir", default="artifacts/robomme_cross_session_results")
-    parser.add_argument("--bootstrap-samples", type=int, default=10000)
-    parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--results-dir", default="results")
     args = parser.parse_args()
 
     results_dir = Path(args.results_dir).resolve()
@@ -229,9 +178,6 @@ def main() -> None:
         )
     lift = pd.DataFrame(lift_rows)
     lift.to_csv(tables_dir / "memory_lift_vs_no_history.csv", index=False)
-
-    paired = paired_bootstrap(df, samples=args.bootstrap_samples, seed=args.seed)
-    paired.to_csv(tables_dir / "paired_bootstrap_comparisons.csv", index=False)
 
     effect_rows = []
     wide = vc.pivot(index="variant", columns="condition", values="rate")
@@ -350,24 +296,6 @@ def main() -> None:
     plt.legend(fontsize=8)
     savefig(figures_dir, "difficulty_plain_success")
 
-    # Figure 5: interference degradation from k0 to k7.
-    deg = paired[paired["comparison"].eq("k7_minus_k0")].copy()
-    deg["drop"] = -deg["diff"]
-    deg["drop_ci_low"] = -deg["ci_high"]
-    deg["drop_ci_high"] = -deg["ci_low"]
-    deg = deg.sort_values("drop", ascending=True)
-    plt.figure(figsize=(8.5, 5.8))
-    y = np.arange(len(deg))
-    vals = pct(deg["drop"])
-    err = np.vstack([pct(deg["drop"] - deg["drop_ci_low"]), pct(deg["drop_ci_high"] - deg["drop"])])
-    plt.barh(y, vals, xerr=err, capsize=3)
-    plt.yticks(y, [DISPLAY_NAMES.get(v, v) for v in deg["variant"]])
-    plt.axvline(0, color="black", linewidth=1)
-    plt.xlabel("Success drop from k0 to k7 (percentage points)")
-    plt.title("Interference sensitivity as relevant memory moves farther back")
-    plt.grid(axis="x", alpha=0.25)
-    savefig(figures_dir, "interference_drop_k0_to_k7")
-
     # Supporting figures: lift over no-history is useful, but not the main claim.
     plt.figure(figsize=(9.5, 5.8))
     x_memory = np.arange(len(MEMORY_CONDITIONS))
@@ -403,8 +331,7 @@ def main() -> None:
     savefig(figures_dir, "k0_lift_ranking")
 
     summary = {
-        "source_results_dir": str(results_dir),
-        "analysis_dir": str(analysis_dir),
+        "results_dir": args.results_dir,
         "expected_cells": manifest["expected_cells"],
         "complete_cells": manifest["complete_cells"],
         "row_coverage": f"{manifest['row_coverage']}/{manifest['expected_rows']}",

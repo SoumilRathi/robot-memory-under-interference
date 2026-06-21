@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Create the paper protocol diagram for the cross-session benchmark."""
+"""Create the benchmark schematic for RoboMME-Interference.
+
+One clean row: the history buffer holds the relevant lesson followed by k
+unrelated sessions; the policy then acts in the query episode. k in {0,1,3,7}
+controls how far back the relevant memory sits (no-history = empty buffer).
+"""
 
 from __future__ import annotations
 
@@ -8,102 +13,109 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
+# Output path is resolved relative to this file, so the script works from any CWD.
+# The diagram is a website asset (the paper is hosted on arXiv, not in this repo).
+OUT_DIR = Path(__file__).resolve().parent.parent / "assets"
 
-OUT_DIR = Path("paper/figures")
-
-
-def box(ax, xy, width, height, label, facecolor, edgecolor="#222222"):
-    patch = FancyBboxPatch(
-        xy,
-        width,
-        height,
-        boxstyle="round,pad=0.035,rounding_size=0.04",
-        linewidth=1.4,
-        edgecolor=edgecolor,
-        facecolor=facecolor,
-    )
-    ax.add_patch(patch)
-    ax.text(xy[0] + width / 2, xy[1] + height / 2, label, ha="center", va="center", fontsize=11)
-    return patch
+INK = "#171717"
+MUTED = "#5a5a5a"
+ACCENT = "#234f7e"
+ACCENT_FILL = "#e9f0f7"
+GRAY = "#9a9a9a"
+GRAY_FILL = "#f1f1ef"
 
 
-def arrow(ax, start, end, text=None, yoff=0.0):
+def box(ax, x, y, w, h, label, edge, fill, textcolor=INK, fontsize=12, lw=1.6):
     ax.add_patch(
-        FancyArrowPatch(
-            start,
-            end,
-            arrowstyle="-|>",
-            mutation_scale=18,
-            linewidth=1.6,
-            color="#222222",
-            shrinkA=4,
-            shrinkB=4,
+        FancyBboxPatch(
+            (x, y),
+            w,
+            h,
+            boxstyle="round,pad=0.02,rounding_size=0.06",
+            linewidth=lw,
+            edgecolor=edge,
+            facecolor=fill,
         )
     )
-    if text:
-        ax.text((start[0] + end[0]) / 2, (start[1] + end[1]) / 2 + yoff, text, ha="center", va="center", fontsize=9)
+    ax.text(x + w / 2, y + h / 2, label, ha="center", va="center", fontsize=fontsize, color=textcolor)
+
+
+def arrow(ax, x0, x1, y):
+    ax.add_patch(
+        FancyArrowPatch(
+            (x0, y),
+            (x1, y),
+            arrowstyle="-|>",
+            mutation_scale=16,
+            linewidth=1.6,
+            color=INK,
+            shrinkA=2,
+            shrinkB=2,
+        )
+    )
 
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(14.5, 6.0))
-    ax.set_xlim(0, 14.5)
-    ax.set_ylim(0, 6.0)
+    fig, ax = plt.subplots(figsize=(11, 3.1))
+    ax.set_xlim(0, 11)
+    ax.set_ylim(0, 3.1)
     ax.axis("off")
 
-    ax.text(0.25, 5.55, "RoboMME-Interference protocol", fontsize=18, weight="bold", ha="left")
-    ax.text(
-        0.25,
-        5.15,
-        "A policy must act in the query session after seeing a relevant lesson mixed with unrelated prior sessions.",
-        fontsize=11,
-        ha="left",
-        color="#333333",
-    )
+    yc = 1.6
+    h = 1.05
+    yb = yc - h / 2
 
-    box(ax, (0.35, 3.15), 2.15, 0.95, "Relevant lesson\nsession", "#c7e9c0", "#276419")
-    box(ax, (3.05, 3.15), 2.15, 0.95, "Distractor\nsession", "#fdd0a2", "#a63603")
-    box(ax, (5.55, 3.15), 2.15, 0.95, "More unrelated\nsessions", "#fdd0a2", "#a63603")
-    box(ax, (8.35, 3.15), 2.15, 0.95, "Memory buffer\nfed to policy", "#dadaeb", "#54278f")
-    box(ax, (11.25, 3.15), 2.15, 0.95, "Query rollout\nsuccess/fail", "#c6dbef", "#08519c")
+    # Relevant lesson (the one session that matters).
+    box(ax, 0.35, yb, 2.25, h, "Relevant\nlesson", ACCENT, ACCENT_FILL, textcolor=ACCENT)
 
-    arrow(ax, (2.55, 3.62), (3.0, 3.62))
-    arrow(ax, (5.25, 3.62), (5.5, 3.62))
-    arrow(ax, (7.75, 3.62), (8.3, 3.62))
-    arrow(ax, (10.55, 3.62), (11.2, 3.62))
+    # Unrelated sessions: offset shadows imply "x k".
+    dx, dw = 3.45, 2.25
+    for off in (0.26, 0.13):
+        ax.add_patch(
+            FancyBboxPatch(
+                (dx + off, yb + off),
+                dw,
+                h,
+                boxstyle="round,pad=0.02,rounding_size=0.06",
+                linewidth=1.2,
+                edgecolor=GRAY,
+                facecolor=GRAY_FILL,
+                alpha=0.55,
+            )
+        )
+    box(ax, dx, yb, dw, h, "Unrelated\nsession", GRAY, "#ffffff", textcolor=MUTED)
+    ax.text(dx + dw + 0.42, yb + 0.18, r"$\times\,k$", ha="left", va="center", fontsize=14, color=MUTED)
 
-    ax.text(1.42, 2.65, "The useful evidence", ha="center", fontsize=9, color="#276419")
-    ax.text(4.12, 2.65, "Different-family filler", ha="center", fontsize=9, color="#a63603")
-    ax.text(6.62, 2.65, "k controls interference", ha="center", fontsize=9, color="#a63603")
-    ax.text(9.42, 2.65, "Same policy interface", ha="center", fontsize=9, color="#54278f")
-    ax.text(12.32, 2.65, "Robot acts normally", ha="center", fontsize=9, color="#08519c")
+    # Query episode (where the policy acts).
+    qx, qw = 7.85, 2.45
+    box(ax, qx, yb, qw, h, "Query\nepisode", ACCENT, "#ffffff")
 
-    condition_y = 1.35
-    ax.text(0.35, condition_y + 0.55, "History conditions:", fontsize=11, weight="bold", ha="left")
-    conditions = [
-        ("no-history", "empty\nexternal history"),
-        ("k0", "lesson\nonly"),
-        ("k1", "lesson + 1\ndistractor"),
-        ("k3", "lesson + 3\ndistractors"),
-        ("k7", "lesson + 7\ndistractors"),
-    ]
-    x = 0.35
-    for name, desc in conditions:
-        width = 2.55 if name == "no-history" else 2.35
-        box(ax, (x, condition_y - 0.28), width, 0.78, f"{name}\n{desc}", "#f7f7f7", "#777777")
-        x += width + 0.18
+    # Flow arrows.
+    arrow(ax, 2.6, 3.4, yc)
+    arrow(ax, dx + dw + 0.85, qx - 0.05, yc)
 
+    # Underbrace marking the history buffer (lesson + distractors).
+    bx0, bx1 = 0.35, dx + dw + 0.7
+    ybr = yb - 0.26
+    ax.plot([bx0, bx1], [ybr, ybr], color=MUTED, lw=1.0)
+    ax.plot([bx0, bx0], [ybr, ybr + 0.12], color=MUTED, lw=1.0)
+    ax.plot([bx1, bx1], [ybr, ybr + 0.12], color=MUTED, lw=1.0)
+    ax.text((bx0 + bx1) / 2, ybr - 0.2, "history buffer (memory)", ha="center", va="top", fontsize=11, color=MUTED)
+
+    # Single k annotation.
     ax.text(
         0.35,
-        0.35,
-        "Measurement: one rollout per episode/condition. Report success rates, Wilson confidence intervals, and paired episode-level bootstrap differences.",
-        fontsize=10,
+        0.32,
+        r"$k \in \{0,1,3,7\}$ unrelated sessions sit between the lesson and the query"
+        "        no-history: empty buffer",
         ha="left",
-        color="#333333",
+        va="center",
+        fontsize=10.5,
+        color=INK,
     )
 
-    for ext in ["png", "pdf"]:
-        fig.savefig(OUT_DIR / f"protocol_diagram.{ext}", bbox_inches="tight", dpi=240)
+    fig.savefig(OUT_DIR / "protocol_diagram.png", bbox_inches="tight", dpi=240)
     plt.close(fig)
 
 

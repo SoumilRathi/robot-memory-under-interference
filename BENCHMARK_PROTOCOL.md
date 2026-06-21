@@ -1,96 +1,46 @@
 # RoboMME-Interference Protocol
 
-RoboMME-Interference is a cross-session interference protocol built on RoboMME-style robot memory tasks. The public project title is "Benchmarking Robot Memory Under Interference"; this protocol name is used only to identify the concrete evaluation procedure.
+RoboMME-Interference is a cross-session interference protocol built on [RoboMME](https://robomme.github.io/) (Dai et al., ICML 2026). It reuses RoboMME's tasks, π₀.₅ checkpoints, and released memory-augmented variants, and adds a controlled way to vary how far back a relevant memory sits. The public project is titled *Benchmarking Robot Memory Under Interference*; "RoboMME-Interference" names the evaluation procedure.
 
-## Core Question
+## Core question
 
-Can a memory-augmented robot policy use a relevant prior session when unrelated prior sessions are inserted between that memory and the current query?
+Can a memory-augmented policy still use a relevant prior session once unrelated sessions are inserted between that memory and the current query?
 
-## Setup
+## History conditions
 
-Each rollout has:
+Every rollout is one query episode in which the policy acts, plus an external history buffer fixed at query start. The policy interface is unchanged from RoboMME; only the buffer contents vary.
 
-1. a query episode where the robot acts,
-2. a history buffer available at query start,
-3. a memory condition defining what history is present.
+| Condition | History buffer at query start |
+| --- | --- |
+| `no-history` | empty |
+| `k0` | the relevant lesson session only |
+| `k1` | the lesson, then 1 unrelated distractor session |
+| `k3` | the lesson, then 3 unrelated distractor sessions |
+| `k7` | the lesson, then 7 unrelated distractor sessions |
 
-The policy interface stays fixed. Only the external history buffer changes.
+The lesson is always first; *k* is how far unrelated experience pushes it back.
 
-## History Conditions
+## Distractor construction
 
-- `no-history`: empty external history at query start.
-- `k0`: relevant lesson session only.
-- `k1`: relevant lesson session followed by 1 unrelated distractor session.
-- `k3`: relevant lesson session followed by 3 unrelated distractor sessions.
-- `k7`: relevant lesson session followed by 7 unrelated distractor sessions.
+Each distractor is a fixed unit: 32 stored frames sampled at stride 8 from a 256-frame session of a *different* task family than the query. Drawing from other families adds unrelated experience rather than contradictory facts about the same task. The fixed per-distractor size keeps every *k* step a comparable unit of interference, and *k* is capped at 7 to stay near the history lengths the variants were trained on.
 
-The `k` value measures how far the relevant session is pushed back by unrelated robot experience.
+## Task families
 
-## Task Families
+Nine families, 50 test episodes each: MoveCube, RouteStick, VideoUnmask, VideoUnmaskSwap, VideoRepick, VideoPlaceButton, VideoPlaceOrder, InsertPeg, PatternLock.
 
-The benchmark uses nine structural RoboMME task families:
+## Systems
 
-- MoveCube
-- RouteStick
-- VideoUnmask
-- VideoUnmaskSwap
-- VideoRepick
-- VideoPlaceButton
-- VideoPlaceOrder
-- InsertPeg
-- PatternLock
+Nine systems: the `pi05_baseline` (π₀.₅, no memory) plus eight memory-augmented variants. Each variant pairs a memory **representation** with a **mechanism** for integrating that memory into the policy:
 
-Each family contributes 50 test episodes.
+- Perceptual representation (`framesamp`, `tokendrop`) × integration (`context`, `modul`, `expert`): `perceptual-framesamp-{context,modul,expert}` and `perceptual-tokendrop-{context,modul,expert}`.
+- Recurrent representation (`ttt`) × integration: `recurrent-ttt-context` and `recurrent-ttt-expert`.
 
-## Systems Evaluated
+Excluded from the grid: RoboMME's symbolic variant, which reads privileged subtask annotations instead of the visual history; and RMT and the TTT-Modulator variant, which have no released checkpoints.
 
-Baseline:
+## Metric
 
-- `pi05_baseline`
-
-Perceptual memory variants:
-
-- `perceptual-framesamp-modul`
-- `perceptual-tokendrop-modul`
-- `perceptual-framesamp-context`
-- `perceptual-framesamp-expert`
-- `perceptual-tokendrop-context`
-- `perceptual-tokendrop-expert`
-
-Recurrent memory variants:
-
-- `recurrent-ttt-expert`
-- `recurrent-ttt-context`
-
-Symbolic/oracle-style variants are excluded from the headline grid because they rely on privileged or structured information rather than the same visual-history pathway.
-
-## Distractor Rule
-
-Distractor sessions come from different task families than the query family. This avoids constructing arbitrary contradictory priors within the same task family and measures interference from unrelated robot experience.
-
-## Metrics
-
-Primary metric:
-
-- rollout success rate.
-
-Uncertainty:
-
-- Wilson 95% confidence intervals for success rates.
-- paired episode-level bootstrap confidence intervals for condition differences.
-
-Pairing unit:
-
-- `(task family, episode)` within each evaluated system.
+Rollout success rate, with Wilson 95% confidence intervals. Effects are reported as differences between conditions (e.g. `k0` minus `no-history`); at 450 episodes per cell the effects are large and the intervals do not overlap, so the comparisons stand without resampling.
 
 ## Coverage
 
-Final grid:
-
-- 9 task families,
-- 9 systems,
-- 5 history conditions,
-- 18,450 completed rollouts,
-- 369 / 369 complete cells.
-
-The canonical rollout file is [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv).
+9 families × 9 systems × 5 conditions, with `pi05_baseline` evaluated only under `no-history`: 369 cells of 50 episodes — **18,450 rollouts, 369 / 369 complete**. The canonical record is [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv).

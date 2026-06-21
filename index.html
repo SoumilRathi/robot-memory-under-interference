@@ -8,118 +8,353 @@
       name="description"
       content="A cross-session benchmark for memory-augmented VLAs."
     />
-    <link rel="stylesheet" href="research.css?v=20260616a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Benchmarking Robot Memory Under Interference" />
+    <meta
+      property="og:description"
+      content="A cross-session benchmark over RoboMME task families: can robot memory still use a relevant prior session when unrelated sessions are inserted before the query?"
+    />
+    <meta property="og:url" content="https://robotmemorybench.com" />
+    <meta
+      property="og:image"
+      content="https://robotmemorybench.com/assets/overall_plain_success_by_condition.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Benchmarking Robot Memory Under Interference" />
+    <meta
+      name="twitter:description"
+      content="Perceptual robot memory helps when a relevant session is nearby, but degrades sharply under cross-session interference. A benchmark over RoboMME."
+    />
+    <meta
+      name="twitter:image"
+      content="https://robotmemorybench.com/assets/overall_plain_success_by_condition.png"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23234f7e'/><path d='M4 23 L12 8 L18 16 L28 25' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg>"
+    />
+    <link rel="stylesheet" href="research.css?v=20260618a" />
   </head>
   <body>
+    <nav class="topnav" aria-label="Section navigation">
+      <div class="topnav-inner">
+        <a href="#abstract">Abstract</a>
+        <a href="#protocol">Benchmark</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#systems">Systems</a>
+        <a href="#results">Results</a>
+        <a href="#showcase">Videos</a>
+        <a href="#citation">Cite</a>
+      </div>
+    </nav>
+
     <main>
-      <header class="project-header">
+      <header class="project-header" id="top">
         <p class="venue">RoboMME-Interference</p>
         <h1>Benchmarking Robot Memory Under Interference</h1>
         <p class="subtitle">A cross-session benchmark for memory-augmented VLAs</p>
         <p class="authors">Soumil Rathi</p>
-        <p class="affiliation">Built on RoboMME-style robot memory tasks</p>
+        <p class="affiliation">Independent Researcher</p>
+        <p class="builton">
+          Built on <a href="https://robomme.github.io/">RoboMME</a> (Dai et al.,
+          ICML 2026). We contribute a cross-session interference benchmark over
+          its released tasks and memory variants.
+        </p>
         <nav class="links" aria-label="Project links">
-          <a href="paper/main.pdf">Paper</a>
+          <!-- TODO(launch): point href at the arXiv abstract and change text to "Paper" -->
+          <a class="primary" href="#top">Paper (arXiv soon)</a>
           <a href="https://github.com/SoumilRathi/robot-memory-under-interference">Code</a>
-          <a href="results/canonical_rollouts.csv">Data</a>
-          <a href="BENCHMARK_PROTOCOL.md">Protocol</a>
-          <a href="RESULTS.md">Results</a>
+          <a href="https://github.com/SoumilRathi/robot-memory-under-interference/tree/main/results">Data</a>
         </nav>
       </header>
 
-      <section class="abstract">
+      <section class="hero" aria-label="Headline example">
+        <div class="hero-pair">
+          <figure class="hero-card is-pass">
+            <video
+              src="assets/showcase-videos/videos/PatternLock/perceptual-framesamp-modul__k0__pass.mp4"
+              muted
+              loop
+              autoplay
+              playsinline
+              preload="auto"
+              aria-label="FrameSamp-Modul on PatternLock at k0, success"
+            ></video>
+            <figcaption class="hero-card-cap">
+              <span class="hero-cond">k0 <small>relevant prior only</small></span>
+              <span class="hero-verdict">success</span>
+            </figcaption>
+          </figure>
+          <figure class="hero-card is-fail">
+            <video
+              src="assets/showcase-videos/videos/PatternLock/perceptual-framesamp-modul__k7__fail.mp4"
+              muted
+              loop
+              autoplay
+              playsinline
+              preload="auto"
+              aria-label="FrameSamp-Modul on PatternLock at k7, failure"
+            ></video>
+            <figcaption class="hero-card-cap">
+              <span class="hero-cond">k7 <small>+7 unrelated sessions</small></span>
+              <span class="hero-verdict">failure</span>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="hero-caption">
+          Same task (PatternLock), same memory system (FrameSamp-Modul). At
+          <code>k0</code> the relevant demonstration is the only thing in the
+          history buffer and the policy reproduces the pattern. At
+          <code>k7</code>, with seven unrelated sessions inserted before that
+          demonstration, the same system fails. Closing that gap is what this
+          benchmark measures.
+        </p>
+      </section>
+
+      <section class="abstract" id="abstract">
         <h2>Abstract</h2>
         <p>
           Robots deployed in realistic settings accumulate experience across
           many sessions, tasks, and users. Current robot-memory evaluations
-          often focus on short or within-episode histories. We introduce
-          <strong>RoboMME-Interference</strong>, a cross-session interference
-          protocol over RoboMME task families that measures whether a policy can
-          still use a relevant prior session after unrelated robot experiences
-          are inserted into the history buffer.
+          focus on what a policy can recall within a single episode or short
+          context. We introduce <strong>RoboMME-Interference</strong>, a
+          cross-session benchmark over RoboMME task families that measures
+          whether a policy can still use a relevant prior session once unrelated
+          robot experiences are inserted into the history buffer before it.
         </p>
         <p>
           We evaluate nine runnable memory-policy variants across nine task
           families and 18,450 rollouts. Perceptual memory systems improve
-          success when the relevant session is nearby, but the benefit decays as
-          distractor sessions increase. The benchmark makes interference
-          sensitivity directly measurable for memory-augmented robot policies.
+          success sharply when the relevant session is nearby, but the benefit
+          decays as distractor sessions accumulate, and current systems largely
+          fail to sustain it across sessions.
         </p>
       </section>
 
-      <section class="figure-section">
-        <figure>
-          <img src="assets/overall_plain_success_by_condition.png" alt="Overall success by history condition" />
-          <figcaption>
-            Overall success by history condition. The strongest perceptual
-            memory variants improve at <code>k0</code>, then degrade as
-            unrelated sessions push the relevant memory farther back.
-          </figcaption>
-        </figure>
+      <section class="summary-grid" aria-label="Benchmark scale">
+        <div><span>18,450</span><p>completed rollouts</p></div>
+        <div><span>9</span><p>task families</p></div>
+        <div><span>9</span><p>evaluated systems</p></div>
+        <div><span>5</span><p>history conditions</p></div>
       </section>
 
-      <section class="summary-grid">
-        <div>
-          <span>18,450</span>
-          <p>completed rollouts</p>
-        </div>
-        <div>
-          <span>9</span>
-          <p>task families</p>
-        </div>
-        <div>
-          <span>9</span>
-          <p>evaluated systems</p>
-        </div>
-        <div>
-          <span>5</span>
-          <p>history conditions</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Key Findings</h2>
-        <ul class="findings">
+      <section id="contributions">
+        <h2>Contributions</h2>
+        <ul class="contrib">
           <li>
-            <strong>Nearby relevant memory helps.</strong>
-            FrameSamp-Modul rises from 18.2% with no history to 45.3% at
-            <code>k0</code>.
+            <strong>A cross-session interference benchmark.</strong>
+            We extend RoboMME with a controllable history buffer: a relevant
+            prior demonstration followed by <code>k &isin; {0,1,3,7}</code>
+            unrelated sessions, turning memory distance into a measured
+            variable.
           </li>
           <li>
-            <strong>Interference erodes the gain.</strong>
-            FrameSamp-Modul drops from 45.3% at <code>k0</code> to 19.3% at
-            <code>k7</code>.
+            <strong>A complete, released result grid.</strong>
+            Nine RoboMME task families &times; nine released memory systems
+            &times; five history conditions &times; 50 episodes = 18,450
+            rollouts.
           </li>
           <li>
-            <strong>Memory mechanisms behave differently.</strong>
-            Perceptual variants separate clearly under interference; recurrent
-            TTT variants remain mostly flat in this grid.
+            <strong>A measurable failure mode.</strong>
+            Perceptual memory delivers large near-session gains (FrameSamp-Modul:
+            <code>+27&nbsp;pp</code> at <code>k0</code>) that erode steadily under
+            interference (<code>&minus;26&nbsp;pp</code> by <code>k7</code>), while
+            recurrent variants stay near baseline. Systems that look strong at
+            short range can collapse across sessions.
           </li>
         </ul>
       </section>
 
       <section id="protocol">
-        <h2>Protocol</h2>
+        <h2>The Benchmark</h2>
         <p>
-          Each query episode is evaluated with the same policy interface and a
-          different external history buffer. The relevant lesson always appears
-          before any distractor sessions. Distractors come from different task
-          families to avoid constructing arbitrary contradictory priors within a
-          single family.
+          Every query episode is run through the same policy interface, varying
+          only the external history buffer. The relevant lesson, a prior
+          demonstration of the task, always appears first; the history
+          conditions differ in how many <em>unrelated</em> sessions are inserted
+          before the query reads it.
         </p>
         <figure>
-          <img src="assets/protocol_diagram.png" alt="RoboMME-Interference protocol diagram" />
+          <img
+            src="assets/protocol_diagram.png?v=2"
+            alt="RoboMME-Interference protocol diagram"
+          />
           <figcaption>
-            History conditions: <code>no-history</code>, <code>k0</code>,
-            <code>k1</code>, <code>k3</code>, and <code>k7</code>. Larger
-            <code>k</code> means more unrelated sessions between the relevant
-            memory and the query.
+            History conditions. <code>no-history</code>: query only.
+            <code>k0</code>: the relevant prior session only.
+            <code>k1</code>/<code>k3</code>/<code>k7</code>: the relevant prior
+            session followed by 1, 3, or 7 unrelated distractor sessions. Larger
+            <code>k</code> pushes the relevant memory farther back.
           </figcaption>
         </figure>
+        <p>
+          <strong>Why these nine tasks.</strong> The protocol requires the
+          task-relevant information to live in a self-contained prior session
+          that can be lifted into the history buffer. We therefore use the nine
+          RoboMME tasks that deliver this information as a prior demonstration
+          video, distinct from execution; the remaining tasks embed their cue
+          inside a single episode and have no separable prior session to place
+          under interference.
+        </p>
+        <p>
+          <strong>Why unrelated distractors.</strong> Distractor sessions are
+          drawn from different task families, so they cannot inject contradictory
+          same-family facts. The benchmark therefore measures interference from
+          genuinely unrelated robot experience, the deployment-like failure mode,
+          rather than constructed wrong priors.
+        </p>
+      </section>
+
+      <section id="tasks">
+        <h2>Tasks</h2>
+        <p>
+          Nine task families from RoboMME, each presenting a prior demonstration
+          the policy must use during a separate execution episode. They span
+          three memory types.
+        </p>
+        <div class="table-wrap">
+          <table class="tasks-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Memory type</th>
+                <th>What the prior session must supply</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>VideoRepick</td><td>Object</td><td>Which object was picked up in the demonstration, to re-pick it.</td></tr>
+              <tr><td>VideoPlaceOrder</td><td>Object</td><td>Which target in an ordered set the cube belongs on.</td></tr>
+              <tr><td>VideoPlaceButton</td><td>Object</td><td>The cube-to-target placement shown in the demonstration.</td></tr>
+              <tr><td>VideoUnmask</td><td>Spatial</td><td>Where an occluded cube of a given color is located.</td></tr>
+              <tr><td>VideoUnmaskSwap</td><td>Spatial</td><td>Occluded-cube location after the cubes have been swapped.</td></tr>
+              <tr><td>MoveCube</td><td>Procedural</td><td>The demonstrated manner of moving the cube to its target.</td></tr>
+              <tr><td>InsertPeg</td><td>Procedural</td><td>Which peg to grasp and how to insert it, from the demonstration.</td></tr>
+              <tr><td>PatternLock</td><td>Procedural</td><td>A continuous pattern traced over a grid, to be retraced.</td></tr>
+              <tr><td>RouteStick</td><td>Procedural</td><td>A path through obstacles, including turn directions, to repeat.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">
+          Task definitions and assets are from
+          <a href="https://robomme.github.io/">RoboMME</a> (Dai et al., 2026).
+        </p>
+      </section>
+
+      <section id="systems">
+        <h2>Memory Systems</h2>
+        <p>
+          We run RoboMME's released memory-augmented variants through the
+          benchmark. Each pairs a <em>memory representation</em> (frames, tokens,
+          or hidden states) with a mechanism for integrating that memory into the
+          base &pi;<sub>0.5</sub> policy: <strong>Context</strong> concatenates
+          memory tokens with the input, <strong>Modulator</strong> conditions the
+          policy via adaptive LayerNorm, and <strong>Expert</strong> routes memory
+          through a dedicated expert with block-wise causal attention. The
+          perceptual variants (FrameSamp, TokenDrop) sample or drop visual-history
+          tokens; the recurrent ones (TTT, RMT) keep a compressed hidden state.
+          The baseline is the &pi;<sub>0.5</sub> backbone with no memory.
+        </p>
+        <div class="table-wrap">
+          <table class="sys-matrix">
+            <thead>
+              <tr>
+                <th>Representation</th>
+                <th>Context</th>
+                <th>Modulator</th>
+                <th>Expert</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>FrameSamp <span class="sys-kind">perceptual</span></td><td class="yes">&check;</td><td class="yes">&check;</td><td class="yes">&check;</td></tr>
+              <tr><td>TokenDrop <span class="sys-kind">perceptual</span></td><td class="yes">&check;</td><td class="yes">&check;</td><td class="yes">&check;</td></tr>
+              <tr><td>TTT <span class="sys-kind">recurrent</span></td><td class="yes">&check;</td><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+              <tr><td>RMT <span class="sys-kind">recurrent</span></td><td class="no">&ndash;</td><td class="no">&ndash;</td><td class="no">&ndash;</td></tr>
+              <tr><td>Symbolic <span class="sys-kind">SimpleSG / GroundSG</span></td><td class="no" colspan="3">skipped because it uses predefined subtask annotations</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">
+          &check; evaluated: eight memory variants plus the
+          &pi;<sub>0.5</sub> baseline (nine systems).<br />
+          &ndash; not evaluated: RMT and TTT-Modulator had no released
+          checkpoints at evaluation time.
+        </p>
       </section>
 
       <section id="results">
         <h2>Results</h2>
+
+        <div class="finding">
+          <h3><span class="finding-n">1</span> Relevant memory helps &mdash; when it is near</h3>
+          <p>
+            At <code>k0</code>, with only the relevant session in history,
+            perceptual memory lifts success well above each system's own
+            no-history floor: FrameSamp-Modul from 18.2% to 45.3%
+            (<code>+27.1&nbsp;pp</code>) and TokenDrop-Modul from 17.1% to 35.3%
+            (<code>+18.2&nbsp;pp</code>), against the <code>17.3%</code>
+            &pi;<sub>0.5</sub> baseline.
+          </p>
+          <figure>
+            <img
+              src="assets/overall_plain_success_by_condition.png"
+              alt="Overall success by history condition"
+            />
+            <figcaption>
+              Overall success by memory system and history condition. The gain at
+              <code>k0</code> is largest for the Modulator variants and falls back
+              toward the no-history floor as distractors are added.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="finding">
+          <h3><span class="finding-n">2</span> Interference erodes the benefit</h3>
+          <p>
+            As unrelated sessions push the relevant memory farther back, the gain
+            collapses: FrameSamp-Modul drops about <code>&minus;26.0&nbsp;pp</code>
+            from <code>k0</code> to <code>k7</code> and TokenDrop-Modul about
+            <code>&minus;15.6&nbsp;pp</code>. By <code>k7</code> most systems sit
+            close to where they started with no history at all.
+          </p>
+        </div>
+
+        <div class="finding">
+          <h3><span class="finding-n">3</span> What survives, and where</h3>
+          <p>
+            The decay is not uniform across systems or tasks. Modulator-based
+            perceptual memory separates clearly under interference, while
+            recurrent TTT variants stay near baseline throughout. Across tasks,
+            the lift concentrates on easy and medium episodes; hard tasks stay
+            near the floor for every system, since a policy can only act on a
+            recalled session if it can do the task at all.
+          </p>
+          <div id="heatmap" class="heatmap">
+            <div class="heatmap-head">
+              <div>
+                <h4 class="heatmap-title">Per-family success rate</h4>
+                <p class="heatmap-sub">
+                  Where each system's memory benefit appears and how it survives
+                  interference, broken out by task family. Select any system.
+                </p>
+              </div>
+              <label class="heatmap-select">
+                System
+                <select id="heatmap-system" aria-label="Select a memory system"></select>
+              </label>
+            </div>
+            <div class="heatmap-scroll">
+              <div id="heatmap-grid" class="heatmap-grid" aria-live="polite"></div>
+            </div>
+            <div class="heatmap-legend">
+              <span>0%</span>
+              <span class="heatmap-bar" aria-hidden="true"></span>
+              <span>90%</span>
+              <span class="heatmap-legend-note">cell = success rate (%)</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="table-title">Full grid</h3>
         <div class="table-wrap">
           <table>
             <thead>
@@ -133,8 +368,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>pi0.5 baseline</td><td>17.3%</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr><td>FrameSamp-Modul</td><td>18.2%</td><td>45.3%</td><td>38.4%</td><td>30.0%</td><td>19.3%</td></tr>
+              <tr><td>pi0.5 (baseline)</td><td>17.3%</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr class="is-best"><td>FrameSamp-Modul</td><td>18.2%</td><td>45.3%</td><td>38.4%</td><td>30.0%</td><td>19.3%</td></tr>
               <tr><td>TokenDrop-Modul</td><td>17.1%</td><td>35.3%</td><td>30.9%</td><td>23.6%</td><td>19.8%</td></tr>
               <tr><td>FrameSamp-Context</td><td>17.8%</td><td>26.7%</td><td>18.7%</td><td>18.7%</td><td>17.8%</td></tr>
               <tr><td>FrameSamp-Expert</td><td>17.6%</td><td>27.1%</td><td>20.9%</td><td>19.6%</td><td>19.6%</td></tr>
@@ -146,46 +381,45 @@
           </table>
         </div>
         <p class="note">
-          Full Wilson confidence intervals and paired bootstrap comparisons are
-          included in the released result tables.
+          Success rates across all nine families.
         </p>
-        <div class="figure-pair">
-          <figure>
-            <img src="assets/interference_drop_k0_to_k7.png" alt="Interference drop from k0 to k7" />
-            <figcaption>Success drop from <code>k0</code> to <code>k7</code>.</figcaption>
-          </figure>
-          <figure>
-            <img src="assets/framesamp_modul_family_heatmap.png" alt="FrameSamp-Modul family heatmap" />
-            <figcaption>Per-family results for FrameSamp-Modul.</figcaption>
-          </figure>
+      </section>
+
+      <section id="showcase" class="showcase">
+        <h2>Qualitative Examples</h2>
+        <p>
+          Watch one query episode under increasing interference. Within each
+          task, a system's clips run left to right as the relevant prior session
+          is pushed farther back: <code>no-history</code>, then <code>k0</code>
+          (relevant prior only), then <code>k1</code>, <code>k3</code>,
+          <code>k7</code> with more unrelated sessions inserted before it. A green
+          outline marks a success in the canonical rollout table, and the rail
+          beneath each strip traces pass to fail.
+        </p>
+        <p class="showcase-caption">
+          Three representative tasks and a curated set of systems, chosen to show
+          distinct memory behaviors. The full nine-task &times; nine-system grid
+          is in the results table above and in the paper; these clips are
+          illustrative and never contradict the canonical labels.
+        </p>
+        <div id="showcase-root" class="ic-root" aria-live="polite">
+          <p class="note">Loading qualitative examples&hellip;</p>
         </div>
       </section>
 
-      <section>
-        <h2>What This Benchmark Is</h2>
-        <ul class="scope-list">
-          <li>A cross-session interference protocol over RoboMME-style memory tasks.</li>
-          <li>A measurement of how visual-history memory systems behave as unrelated sessions accumulate.</li>
-          <li>A released result grid with code, data, generated figures, and analysis scripts.</li>
-        </ul>
-
-        <h2>What This Benchmark Is Not</h2>
-        <ul class="scope-list">
-          <li>It is not a new simulator benchmark independent of RoboMME.</li>
-          <li>It is not a claim that current robot-memory systems solve long-term memory.</li>
-          <li>It is not an oracle-symbolic memory benchmark; headline systems use the visual-history pathway.</li>
-        </ul>
-      </section>
-
       <section id="artifacts">
-        <h2>Artifacts</h2>
+        <h2>Reproducibility &amp; Artifacts</h2>
+        <p>
+          Everything needed to reproduce the grid and build on the protocol is
+          released.
+        </p>
         <ul class="artifact-list">
-          <li><a href="paper/main.pdf">Paper draft</a></li>
-          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference">GitHub repository</a></li>
-          <li><a href="results/canonical_rollouts.csv">Canonical rollout CSV</a></li>
-          <li><a href="results/analysis/tables/main_success_rates.csv">Main success table</a></li>
-          <li><a href="BENCHMARK_PROTOCOL.md">Benchmark protocol</a></li>
-          <li><a href="RESULTS.md">Result summary</a></li>
+          <li>Paper &mdash; coming to arXiv; link added when posted.</li>
+          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference">GitHub repository</a> &mdash; code, analysis scripts, and figures.</li>
+          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/results/canonical_rollouts.csv">Canonical rollout CSV</a> &mdash; all 18,450 rollouts, the source of truth.</li>
+          <li><a href="results/analysis/tables/main_success_rates.csv">Main success table</a> &mdash; per-system rates with confidence intervals.</li>
+          <li><a href="BENCHMARK_PROTOCOL.md">Benchmark protocol</a> &mdash; conditions, families, and metrics.</li>
+          <li><a href="RESULTS.md">Results summary</a> &mdash; headline numbers and effects.</li>
         </ul>
       </section>
 
@@ -197,7 +431,25 @@
   year   = {2026},
   url    = {https://robotmemorybench.com}
 }</code></pre>
+        <p class="note">This benchmark builds on RoboMME; please cite it as well.</p>
+        <pre><code>@article{dai2026robomme,
+  title  = {RoboMME: Benchmarking and Understanding Memory for Robotic Generalist Policies},
+  author = {Dai, Yinpei and Fu, Hongze and Lee, Jayjun and Liu, Yuejiang and
+            Zhang, Haoran and Yang, Jianing and Finn, Chelsea and Fazeli, Nima and Chai, Joyce},
+  journal = {arXiv preprint arXiv:2603.04639},
+  year   = {2026}
+}</code></pre>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <p>
+        Code released under Apache-2.0; results under CC BY 4.0. Built with the
+        <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>
+        project-page template.
+      </p>
+    </footer>
+
+    <script src="showcase.js?v=20260617d"></script>
   </body>
 </html>
