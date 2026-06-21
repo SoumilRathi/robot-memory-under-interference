@@ -95,8 +95,10 @@ def pct(series: pd.Series | np.ndarray) -> np.ndarray:
     return np.asarray(series, dtype=float) * 100
 
 
-def savefig(out_dir: Path, name: str) -> None:
+def savefig(out_dir: Path, name: str, pdf: bool = False) -> None:
     plt.savefig(out_dir / f"{name}.png", bbox_inches="tight", dpi=220)
+    if pdf:
+        plt.savefig(out_dir / f"{name}.pdf", bbox_inches="tight")
     plt.close()
 
 
@@ -220,10 +222,9 @@ def main() -> None:
     ax.set_xticks(x, CONDITIONS)
     ax.set_ylabel("Success rate (%)")
     ax.set_xlabel("History condition")
-    ax.set_title("Cross-session memory benchmark: success by session distance")
     ax.grid(axis="y", alpha=0.25)
     ax.legend(ncol=2, loc="upper right")
-    savefig(figures_dir, "overall_plain_success_by_condition")
+    savefig(figures_dir, "overall_plain_success_by_condition", pdf=True)
 
     # Figure 2: per-family small multiples, with all memory variants shown as plain accuracy.
     fig, axes = plt.subplots(3, 3, figsize=(16, 11), sharex=True, sharey=True)
@@ -250,8 +251,7 @@ def main() -> None:
     axes[2, 1].set_xlabel("History condition")
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, ncol=4, loc="lower center", bbox_to_anchor=(0.5, -0.015))
-    fig.suptitle("Per-family success curves across memory systems", y=0.995)
-    savefig(figures_dir, "per_family_plain_success_small_multiples")
+    savefig(figures_dir, "per_family_plain_success_small_multiples", pdf=True)
 
     # Figure 3: family x condition heatmap for strongest variant, shown as plain success.
     best_variant = "perceptual-framesamp-modul"
@@ -290,10 +290,9 @@ def main() -> None:
         plt.bar(xpos, y, width=width, yerr=yerr, capsize=2, label=DISPLAY_NAMES.get(variant, variant))
     plt.xticks(centers, difficulties)
     plt.ylabel("Success rate (%)")
-    plt.title("Success by task difficulty")
     plt.grid(axis="y", alpha=0.25)
     plt.legend(fontsize=8)
-    savefig(figures_dir, "difficulty_plain_success")
+    savefig(figures_dir, "difficulty_plain_success", pdf=True)
 
     # Supporting figures: lift over no-history is useful, but not the main claim.
     plt.figure(figsize=(9.5, 5.8))
