@@ -43,4 +43,4 @@ Rollout success rate, with Wilson 95% confidence intervals. Effects are reported
 
 ## Coverage
 
-9 families × 9 systems × 5 conditions, with `pi05_baseline` evaluated only under `no-history`: 369 cells of 50 episodes — **18,450 rollouts, 369 / 369 complete**. The canonical record is [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv).
+9 families × 9 systems × 5 conditions, with `pi05_baseline` evaluated only under `no-history`: 369 cells of 50 episodes — **18,450 rollouts, 369 / 369 complete**. The canonical record is [`results/canonical_rollouts.csv`](../results/canonical_rollouts.csv).

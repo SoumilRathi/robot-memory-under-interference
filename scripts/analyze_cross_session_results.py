@@ -96,8 +96,7 @@ def pct(series: pd.Series | np.ndarray) -> np.ndarray:
 
 
 def savefig(out_dir: Path, name: str) -> None:
-    for ext in ["png", "pdf"]:
-        plt.savefig(out_dir / f"{name}.{ext}", bbox_inches="tight", dpi=220)
+    plt.savefig(out_dir / f"{name}.png", bbox_inches="tight", dpi=220)
     plt.close()
 
 
