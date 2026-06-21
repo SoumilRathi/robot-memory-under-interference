@@ -300,9 +300,10 @@
               alt="Overall success by history condition"
             />
             <figcaption>
-              Overall success by memory system and history condition. The gain at
-              <code>k0</code> is largest for the Modulator variants and falls back
-              toward the no-history floor as distractors are added.
+              Overall success by memory system and history condition. The
+              <code>k0</code> gain is largest for FrameSamp-Modul and
+              TokenDrop-Modul, and falls back toward the no-history floor as
+              distractors are added.
             </figcaption>
           </figure>
         </div>
@@ -321,12 +322,13 @@
         <div class="finding">
           <h3><span class="finding-n">3</span> What survives, and where</h3>
           <p>
-            The decay is not uniform across systems or tasks. Modulator-based
-            perceptual memory separates clearly under interference, while
-            recurrent TTT variants stay near baseline throughout. Across tasks,
-            the lift concentrates on easy and medium episodes; hard tasks stay
-            near the floor for every system, since a policy can only act on a
-            recalled session if it can do the task at all.
+            The decay is not uniform across systems or tasks. FrameSamp-Modul
+            holds its margin over baseline longest and frame sampling proves more
+            robust than token dropping, while recurrent TTT variants stay near the
+            baseline throughout. Across tasks, the lift concentrates on easy and
+            medium episodes; hard tasks stay near the floor for every system,
+            since a policy can only act on a recalled session if it can do the
+            task at all.
           </p>
           <div id="heatmap" class="heatmap">
             <div class="heatmap-head">
@@ -417,9 +419,7 @@
           <li>Paper &mdash; coming to arXiv; link added when posted.</li>
           <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference">GitHub repository</a> &mdash; code, analysis scripts, and figures.</li>
           <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/results/canonical_rollouts.csv">Canonical rollout CSV</a> &mdash; all 18,450 rollouts, the source of truth.</li>
-          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/results/analysis/tables/main_success_rates.csv">Main success table</a> &mdash; per-system rates with confidence intervals.</li>
-          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/docs/protocol.md">Benchmark protocol</a> &mdash; conditions, families, and metrics.</li>
-          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/README.md#results">Results summary</a> &mdash; headline numbers and effects.</li>
+          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/results/analysis/tables/main_success_rates.csv">Main success table</a> &mdash; per-system rates with confidence intervals.</li>          <li><a href="https://github.com/SoumilRathi/robot-memory-under-interference/blob/main/README.md#results">Results summary</a> &mdash; headline numbers and effects.</li>
         </ul>
       </section>
 

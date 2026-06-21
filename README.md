@@ -11,15 +11,14 @@ It is built directly on **[RoboMME](https://robomme.github.io/)** (Dai et al., I
 Memory helps most when the lesson is the most recent session (`k0`) and decays back toward the no-memory baseline as distractor sessions push it back. Explore it interactively at **[robotmemorybench.com](https://robotmemorybench.com)**.
 
 - **Website:** https://robotmemorybench.com
-- **Paper:** arXiv (forthcoming)
-- **Protocol:** [docs/protocol.md](docs/protocol.md)
+- **Paper:** arXiv (forthcoming) — the full method and protocol
 - **Data:** [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv) — every rollout, the source of truth
 
 ## At a glance
 
 - **Conditions:** `no-history`, `k0`, `k1`, `k3`, `k7` — the number of unrelated sessions sitting between the lesson and the query.
 - **Grid:** 9 task families × 9 systems × 5 conditions × 50 episodes = **18,450 rollouts** (369 / 369 cells complete).
-- **Finding:** the memory gain belongs almost entirely to adaptive-modulation integration; it is a recency effect rather than durable recall, and recurrent variants stay flat.
+- **Finding:** perceptual memory systems improve success sharply when the relevant session is recent, then decay to the no-memory baseline as unrelated sessions accumulate. Recurrent variants stay flat throughout.
 
 ## Headline result
 
@@ -41,11 +40,11 @@ Per-cell Wilson 95% intervals are in [`results/analysis/tables/main_success_rate
 
 ## Results
 
-- **Adaptive modulation carries the effect.** FrameSamp-Modul and TokenDrop-Modul are the only systems with a large near-session gain: +27.1 and +18.2 percentage points at `k0` over their own no-history rate.
-- **That gain is recency, not recall.** As distractors push the lesson back, both decay to baseline — FrameSamp-Modul from 45.3% at `k0` to 19.3% at `k7` (a +1.1 pp residual over no-history), TokenDrop-Modul from 35.3% to 19.8% (+2.7 pp).
-- **Other integration mechanisms barely move.** Context (concatenation) and Expert (block-wise attention) variants gain little even at `k0`.
-- **Recurrent memory is flat.** The TTT variants track π₀.₅ across every condition.
-- **The benefit concentrates on easier tasks.** Pooled across conditions, FrameSamp-Modul reaches 38.0% on easy and 28.5% on medium tasks (π₀.₅: 20.9% and 13.9%) but only 15.2% on hard tasks against a 13.0% floor.
+- **Perceptual memory helps when the relevant session is recent.** FrameSamp-Modul is strongest, rising from 18.2% with no history to 45.3% at `k0`; TokenDrop-Modul rises from 17.1% to 35.3%, against the 17.3% π₀.₅ baseline.
+- **The benefit decays as unrelated sessions accumulate.** Both fall back to the baseline by `k7` — FrameSamp-Modul to 19.3%, TokenDrop-Modul to 19.8%.
+- **Frame sampling is more robust than token dropping** across every condition.
+- **Recurrent memory stays flat.** The TTT variants track the π₀.₅ baseline throughout.
+- **The signal is clearest where the policy can already act.** The lift concentrates on easy and medium tasks (FrameSamp-Modul 38.0% and 28.5%, vs π₀.₅ 20.9% and 13.9%); hard tasks stay near the floor (15.2% vs 13.0%).
 
 Full tables and figures are in [`results/analysis/`](results/analysis).
 
@@ -54,7 +53,6 @@ Full tables and figures are in [`results/analysis/`](results/analysis).
 ```text
 .
 ├── index.html, research.css, showcase.js   # project website (served via GitHub Pages)
-├── docs/protocol.md                         # protocol specification
 ├── results/
 │   ├── canonical_rollouts.csv               # 18,450 rollouts — source of truth
 │   ├── coverage.csv, grid_summary.csv, by_family_condition.csv, by_difficulty.csv
