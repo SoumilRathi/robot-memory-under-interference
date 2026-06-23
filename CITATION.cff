@@ -5,7 +5,7 @@ authors:
   - family-names: "Rathi"
     given-names: "Soumil"
 year: 2026
-repository-code: "https://github.com/SoumilRathi/robot-memory-under-interference"
+repository-code: "https://github.com/SoumilRathi/robomme-interference"
 url: "https://robotmemorybench.com"
 preferred-citation:
   type: article
