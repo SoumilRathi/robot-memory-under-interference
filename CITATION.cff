@@ -14,3 +14,8 @@ preferred-citation:
     - family-names: "Rathi"
       given-names: "Soumil"
   year: 2026
+  url: "https://arxiv.org/abs/2606.22338"
+  identifiers:
+    - type: other
+      value: "arXiv:2606.22338"
+      description: "arXiv preprint"

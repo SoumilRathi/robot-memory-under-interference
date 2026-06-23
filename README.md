@@ -1,5 +1,7 @@
 # Benchmarking Robot Memory Under Interference
 
+[![arXiv](https://img.shields.io/badge/arXiv-2606.22338-b31b1b.svg)](https://arxiv.org/abs/2606.22338)
+
 A cross-session benchmark for memory-augmented vision-language-action policies.
 
 Robots that run for days accumulate experience across many sessions, users, and tasks. A useful memory system has to hold onto a relevant past session even when unrelated sessions pile up in between. This benchmark measures that directly: it places a relevant *lesson* session in the policy's history, inserts *k* unrelated distractor sessions after it, and tests whether the policy can still use the lesson to solve the current task.
@@ -11,7 +13,7 @@ It is built directly on **[RoboMME](https://robomme.github.io/)** (Dai et al., I
 Memory helps most when the lesson is the most recent session (`k0`) and decays back toward the no-memory baseline as distractor sessions push it back. Explore it interactively at **[robotmemorybench.com](https://robotmemorybench.com)**.
 
 - **Website:** https://robotmemorybench.com
-- **Paper:** arXiv (forthcoming) — the full method and protocol
+- **Paper:** [arXiv:2606.22338](https://arxiv.org/abs/2606.22338) — the full method and protocol
 - **Data:** [`results/canonical_rollouts.csv`](results/canonical_rollouts.csv) — every rollout, the source of truth
 
 ## At a glance
